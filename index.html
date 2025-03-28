@@ -3,138 +3,603 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luxury Homes</title>
+    <title>Luxury Homes - Imóveis de Luxo</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Reset e Estilos Globais */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f9f9f9;
+        }
+        
+        /* Header e Navegação */
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo h1 {
+            font-size: 1.8rem;
+            color: white;
+        }
+        
+        nav {
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 1.5rem;
+        }
+        
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            padding: 0.5rem 0;
+            position: relative;
+        }
+        
+        .nav-link:hover {
+            color: #3498db;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #3498db;
+            transition: width 0.3s;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .budget-button {
+            background-color: #3498db;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        
+        .budget-button:hover {
+            background-color: #2980b9;
+        }
+        
+        /* Menu Hamburguer */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 30px;
+            height: 21px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            z-index: 1001;
+        }
+        
+        .hamburger-line {
+            display: block;
+            width: 100%;
+            height: 3px;
+            background-color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .hamburger.active .hamburger-line:nth-child(1) {
+            transform: translateY(9px) rotate(45deg);
+        }
+        
+        .hamburger.active .hamburger-line:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .hamburger.active .hamburger-line:nth-child(3) {
+            transform: translateY(-9px) rotate(-45deg);
+        }
+        
+        /* Banner Principal */
+        .banner {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('imagens/banner.jpg') no-repeat center center/cover;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            margin-top: 68px; /* Altura do header */
+        }
+        
+        .banner-content {
+            max-width: 800px;
+            padding: 0 1rem;
+        }
+        
+        .banner h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Formulário de Busca */
+        .search-form {
+            display: flex;
+            gap: 1rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .form-group {
+            flex: 1;
+            position: relative;
+        }
+        
+        .search-form input, 
+        .search-form select {
+            width: 100%;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .search-button {
+            padding: 0.8rem 1.5rem;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+        
+        .search-button:hover {
+            background-color: #2980b9;
+        }
+        
+        /* Dropdown de Estados */
+        .states-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            max-height: 300px;
+            overflow-y: auto;
+            background: white;
+            border-radius: 0 0 4px 4px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+        
+        .states-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .state-option {
+            padding: 0.8rem 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            color: #333;
+        }
+        
+        .state-option:hover {
+            background-color: #f0f0f0;
+        }
+        
+        /* Seções */
+        section {
+            padding: 4rem 2rem;
+        }
+        
+        h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+            color: #2c3e50;
+        }
+        
+        /* Grid de Imóveis e Blog */
+        .property-grid, .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .property-card, .blog-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .property-card:hover, .blog-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .property-card img, .blog-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .property-card h3, .blog-card h3 {
+            margin: 1rem;
+            color: #2c3e50;
+        }
+        
+        .property-card p, .blog-card p {
+            margin: 0 1rem 1rem;
+            color: #7f8c8d;
+        }
+        
+        .price {
+            font-size: 1.2rem;
+            color: #3498db;
+            font-weight: bold;
+            margin: 1rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            margin: 1rem;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        
+        /* Formulário de Contato */
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+            display: grid;
+            gap: 1rem;
+        }
+        
+        .contact-form input, 
+        .contact-form textarea {
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .contact-form textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+        
+        .contact-form button {
+            padding: 0.8rem;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+        
+        .contact-form button:hover {
+            background-color: #2980b9;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .social-icons {
+            margin-bottom: 1rem;
+        }
+        
+        .social-icons a {
+            color: white;
+            margin: 0 0.5rem;
+            font-size: 1.5rem;
+            transition: color 0.3s;
+        }
+        
+        .social-icons a:hover {
+            color: #3498db;
+        }
+        
+        /* Acessibilidade */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+        
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+            
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 70%;
+                height: 100vh;
+                background-color: #2c3e50;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                transition: right 0.3s ease-in-out;
+                padding-top: 5rem;
+            }
+            
+            .nav-links.active {
+                right: 0;
+            }
+            
+            .nav-links li {
+                margin: 1rem 0;
+            }
+            
+            .search-form {
+                flex-direction: column;
+            }
+            
+            .states-list {
+                grid-template-columns: 1fr;
+            }
+            
+            #property-location:focus + .states-dropdown,
+            .states-dropdown:hover {
+                display: block;
+            }
+        }
+    </style>
 </head>
 <body>
     <header>
         <div class="logo">
             <h1>Luxury Homes</h1>
         </div>
-        <nav>
-            
-            <div class="hamburger" id="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
+        <nav aria-label="Menu principal">
+            <button class="hamburger" id="hamburger" aria-expanded="false" aria-label="Abrir menu">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
          
             <ul class="nav-links" id="nav-links">
-                <li><a href="#home">Início</a></li>
-                <li><a href="#properties">Imóveis</a></li>
-                <li><a href="#about">Sobre Nós</a></li>
-                <li><a href="#blog">Blog</a></li>
-                <li><a href="#contact">Contato</a></li>
-                
+                <li><a href="#home" class="nav-link">Início</a></li>
+                <li><a href="#properties" class="nav-link">Imóveis</a></li>
+                <li><a href="#about" class="nav-link">Sobre Nós</a></li>
+                <li><a href="#blog" class="nav-link">Blog</a></li>
+                <li><a href="#contact" class="nav-link">Contato</a></li>
                 <li><a href="#budget" class="budget-button">Orçamento</a></li>
             </ul>
         </nav>
     </header>
        
-        <section id="home" class="banner">
-            <div class="banner-content">
-                <h2>Encontre seu imóvel dos sonhos</h2>
-                <form class="search-form">
-                    <input type="text" placeholder="Localização">
-                    <select>
+    <section id="home" class="banner">
+        <div class="banner-content">
+            <h2>Encontre seu imóvel dos sonhos</h2>
+            <form class="search-form" role="search">
+                <div class="form-group location-group">
+                    <label for="property-location" class="sr-only">Localização</label>
+                    <input type="text" id="property-location" placeholder="Selecione um estado" readonly>
+                    <div class="states-dropdown" id="states-dropdown">
+                        <div class="states-list">
+                            <div class="state-option" data-value="AC">Acre</div>
+                            <div class="state-option" data-value="AL">Alagoas</div>
+                            <div class="state-option" data-value="AP">Amapá</div>
+                            <div class="state-option" data-value="AM">Amazonas</div>
+                            <div class="state-option" data-value="BA">Bahia</div>
+                            <div class="state-option" data-value="CE">Ceará</div>
+                            <div class="state-option" data-value="DF">Distrito Federal</div>
+                            <div class="state-option" data-value="ES">Espírito Santo</div>
+                            <div class="state-option" data-value="GO">Goiás</div>
+                            <div class="state-option" data-value="MA">Maranhão</div>
+                            <div class="state-option" data-value="MT">Mato Grosso</div>
+                            <div class="state-option" data-value="MS">Mato Grosso do Sul</div>
+                            <div class="state-option" data-value="MG">Minas Gerais</div>
+                            <div class="state-option" data-value="PA">Pará</div>
+                            <div class="state-option" data-value="PB">Paraíba</div>
+                            <div class="state-option" data-value="PR">Paraná</div>
+                            <div class="state-option" data-value="PE">Pernambuco</div>
+                            <div class="state-option" data-value="PI">Piauí</div>
+                            <div class="state-option" data-value="RJ">Rio de Janeiro</div>
+                            <div class="state-option" data-value="RN">Rio Grande do Norte</div>
+                            <div class="state-option" data-value="RS">Rio Grande do Sul</div>
+                            <div class="state-option" data-value="RO">Rondônia</div>
+                            <div class="state-option" data-value="RR">Roraima</div>
+                            <div class="state-option" data-value="SC">Santa Catarina</div>
+                            <div class="state-option" data-value="SP">São Paulo</div>
+                            <div class="state-option" data-value="SE">Sergipe</div>
+                            <div class="state-option" data-value="TO">Tocantins</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="transaction-type" class="sr-only">Tipo de Transação</label>
+                    <select id="transaction-type">
                         <option value="buy">Comprar</option>
                         <option value="rent">Alugar</option>
                     </select>
-                    <button type="submit">Buscar</button>
-                </form>
-            </div>
-        </section>
-    
-       
-        <section id="properties" class="properties">
-            <h2>Imóveis em Destaque</h2>
-            <div class="property-grid">
-                <div class="property-card">
-                    <img src="imagens/casa.jpg" alt="Casa de Luxo">
-                    <h3>Casa de Luxo</h3>
-                    <p>5 quartos, 6 banheiros, 500m²</p>
-                    <p class="price">R$ 5.000.000</p>
-                    <a href="#" class="btn">Ver Detalhes</a>
-                </div>
-                <div class="property-card">
-                    <img src="imagens/casa001.jpg" alt="Apartamento de Luxo">
-                    <h3>Apartamento de Luxo</h3>
-                    <p>3 quartos, 4 banheiros, 300m²</p>
-                    <p class="price">R$ 3.500.000</p>
-                    <a href="#" class="btn">Ver Detalhes</a>
-                </div>
-               
-            </div>
-        </section>
-    
-        <section id="about" class="about">
-            <h2>Sobre Nós</h2>
-            <p>Somos uma agência especializada em imóveis de alto padrão, oferecendo o melhor do mercado de luxo.</p>
-            <a href="#" class="btn">Saiba Mais</a>
-        </section>
-    
-       
-        <section id="blog" class="blog">
-            <h2>Últimas Notícias</h2>
-            <div class="blog-grid">
-                <div class="blog-card">
-                    <img src="imagens/pexels-binyaminmellish-1396122.jpg" alt="Tendências do Mercado">
-                    <h3>Tendências do Mercado</h3>
-                    <p>Descubra as últimas tendências no mercado imobiliário de luxo.</p>
-                    <a href="#" class="btn">Leia Mais</a>
-                </div>
-                <div class="blog-card">
-                    <img src="imagens/casa002.jpg" alt="Dicas de Decoração">
-                    <h3>Dicas de Decoração</h3>
-                    <p>Inspire-se com nossas dicas de decoração para imóveis de luxo.</p>
-                    <a href="#" class="btn">Leia Mais</a>
                 </div>
                 
-            </div>
-        </section>
-    
-       
-        <section id="contact" class="contact">
-            <h2>Entre em Contato</h2>
-            <form class="contact-form">
-                <input type="text" placeholder="Nome" required>
-                <input type="email" placeholder="E-mail" required>
-                <input type="tel" placeholder="Telefone" required>
-                <textarea placeholder="Mensagem" required></textarea>
-                <button type="submit">Enviar</button>
+                <button type="submit" class="search-button">Buscar</button>
             </form>
-        </section>
+        </div>
+    </section>
     
-        
-        <footer>
-            <div class="social-icons">
-                <a href="#"><i class="fab fa-facebook"></i></a>
-                <a href="#"><i class="fab fa-instagram"></i></a>
-                <a href="#"><i class="fab fa-twitter"></i></a>
+    <section id="properties" class="properties">
+        <h2>Imóveis em Destaque</h2>
+        <div class="property-grid">
+            <div class="property-card">
+                <img src="imagens/casa.jpg" alt="Casa de Luxo">
+                <h3>Casa de Luxo</h3>
+                <p>5 quartos, 6 banheiros, 500m²</p>
+                <p class="price">R$ 5.000.000</p>
+                <a href="#" class="btn">Ver Detalhes</a>
             </div>
-            <p>&copy; 2023 Luxury Homes. Todos os direitos reservados. <br> Desenvolvido Por Rildo Lauretino.</p>
-        </footer>
+            <div class="property-card">
+                <img src="imagens/casa001.jpg" alt="Apartamento de Luxo">
+                <h3>Apartamento de Luxo</h3>
+                <p>3 quartos, 4 banheiros, 300m²</p>
+                <p class="price">R$ 3.500.000</p>
+                <a href="#" class="btn">Ver Detalhes</a>
+            </div>
+        </div>
+    </section>
+    
+    <section id="about" class="about">
+        <h2>Sobre Nós</h2>
+        <p>Somos uma agência especializada em imóveis de alto padrão, oferecendo o melhor do mercado de luxo.</p>
+        <a href="#" class="btn">Saiba Mais</a>
+    </section>
+    
+    <section id="blog" class="blog">
+        <h2>Últimas Notícias</h2>
+        <div class="blog-grid">
+            <div class="blog-card">
+                <img src="imagens/pexels-binyaminmellish-1396122.jpg" alt="Tendências do Mercado">
+                <h3>Tendências do Mercado</h3>
+                <p>Descubra as últimas tendências no mercado imobiliário de luxo.</p>
+                <a href="#" class="btn">Leia Mais</a>
+            </div>
+            <div class="blog-card">
+                <img src="imagens/casa002.jpg" alt="Dicas de Decoração">
+                <h3>Dicas de Decoração</h3>
+                <p>Inspire-se com nossas dicas de decoração para imóveis de luxo.</p>
+                <a href="#" class="btn">Leia Mais</a>
+            </div>
+        </div>
+    </section>
+    
+    <section id="contact" class="contact">
+        <h2>Entre em Contato</h2>
+        <form class="contact-form">
+            <input type="text" placeholder="Nome" required>
+            <input type="email" placeholder="E-mail" required>
+            <input type="tel" placeholder="Telefone" required>
+            <textarea placeholder="Mensagem" required></textarea>
+            <button type="submit">Enviar</button>
+        </form>
+    </section>
+    
+    <footer>
+        <div class="social-icons">
+            <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+        </div>
+        <p>&copy; 2025 Luxury Homes. Todos os direitos reservados. <br> Desenvolvido Por Rildo Lauretino.</p>
+    </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-
+        // Menu Hamburguer
+        document.addEventListener('DOMContentLoaded', function() {
             const hamburger = document.getElementById('hamburger');
-
             const navLinks = document.getElementById('nav-links');
-
-            const navItems = document.querySelectorAll('.nav-links li a');
-
-            hamburger.addEventListener('click', function () {
+            const navItems = document.querySelectorAll('.nav-link, .budget-button');
             
+            hamburger.addEventListener('click', function() {
+                this.classList.toggle('active');
                 navLinks.classList.toggle('active');
+                
+                // Atualizar ARIA
+                const isExpanded = this.getAttribute('aria-expanded') === 'true';
+                this.setAttribute('aria-expanded', !isExpanded);
             });
-
             
+            // Fechar menu ao clicar em um link
             navItems.forEach(item => {
-                item.addEventListener('click', function () {
-                    navLinks.classList.remove('active');
+                item.addEventListener('click', function() {
+                    if (window.innerWidth <= 768) {
+                        hamburger.classList.remove('active');
+                        navLinks.classList.remove('active');
+                        hamburger.setAttribute('aria-expanded', 'false');
+                    }
                 });
+            });
+            
+            // Fechar menu ao redimensionar a tela
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768) {
+                    hamburger.classList.remove('active');
+                    navLinks.classList.remove('active');
+                    hamburger.setAttribute('aria-expanded', 'false');
+                }
+            });
+            
+            // Seletor de Estados
+            const locationInput = document.getElementById('property-location');
+            const statesDropdown = document.getElementById('states-dropdown');
+            const stateOptions = document.querySelectorAll('.state-option');
+            
+            locationInput.addEventListener('click', function() {
+                statesDropdown.style.display = 'block';
+                this.blur();
+            });
+            
+            stateOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    locationInput.value = this.textContent;
+                    statesDropdown.style.display = 'none';
+                });
+            });
+            
+            document.addEventListener('click', function(e) {
+                if (!locationInput.contains(e.target) && !statesDropdown.contains(e.target)) {
+                    statesDropdown.style.display = 'none';
+                }
             });
         });
     </script>
